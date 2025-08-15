@@ -4,6 +4,16 @@
     <title>
       About me
     </title>
+     <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Kandinsky p5.js</title>
+  <style>
+    body { margin: 0; background: #f6f4ee; font-family: system-ui, Arial; }
+    #wrap { max-width: 960px; margin: 24px auto; padding: 8px; }
+    canvas { display:block; margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,.08); border-radius: 12px; }
+    .hint { text-align:center; color:#445; margin-top:10px; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.min.js"></script>
   </head>
   <body>
     <h1>
@@ -12,6 +22,11 @@
     <p>
       I am a current third year student at University of California, Santa Barbara. I am purusing a Bachelor's degree in Economics and Accounting, and a minor in Media Arts and Design.
     </p>
-    <img src = "https://editor.p5js.org/jinjejungg/sketches/18Zkeeiuz", width= "500", height= "500">
+     <div id="wrap">
+    <div class="hint">Click to reshuffle · Space = pause/play · S = save PNG · P = toggle parallax</div>
+  </div>
+
+  <!-- your sketch code -->
+  <script src="sketch.js"></script>
   </body>
 </html>
