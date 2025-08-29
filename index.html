@@ -1,43 +1,278 @@
 <!DOCTYPE html>
-<html lang = 'en'>
-  <head>
-    <title>
-      About me
-    </title>
-     <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Kandinsky p5.js</title>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jinje Jung — Portfolio</title>
+  <meta name="description" content="A clean, professional one‑page portfolio replicating the content from jinjejungg.github.io with accessible, responsive design." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body { margin: 0; background: #000; color: #fff; font-family: system-ui, Arial; text-align: center;}
-    #wrap { max-width: 960px; margin: 24px auto; padding: 8px; 
-    canvas { display:block; margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,.08); border-radius: 12px; }
-    .hint { text-align:center; color:#445; margin-top:10px; }
-    a {
-    color: #0af;             
-    text-decoration: none;   
+    :root{
+      --bg: #0b0c0f;         
+      --panel: #111318;      
+      --text: #e9eef6;       
+      --muted: #aab3c5;       
+      --brand: #8aa4ff;      
+      --line: #19202a;       
+      --ring: #2b2f3a;        
+      --shadow: 0 10px 25px rgba(0,0,0,.35);
     }
-    a:hover {
-    color: #ff0;           
-    text-decoration: underline;
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg); color: var(--text); line-height: 1.6;
+      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
     }
-    a:visited {
-    color: #aaa;             
+    a{color: var(--brand); text-decoration: none}
+    a:hover{opacity:.9}
+    img{max-width:100%; height:auto; display:block}
+    .wrap{max-width:1080px; margin:0 auto; padding: clamp(16px, 3vw, 28px)}
+
+    /* Header */
+    .skip-link{position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden}
+    .skip-link:focus{left:12px; top:12px; width:auto; height:auto; padding:8px 12px; background:#000; color:#fff; z-index:9999; border-radius:10px}
+    header{
+      position: sticky; top:0; z-index: 20; backdrop-filter: saturate(120%) blur(6px);
+      background: color-mix(in srgb, var(--bg), transparent 25%);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav{display:flex; align-items:center; justify-content:space-between; gap:16px}
+    .brand{display:flex; align-items:center; gap:12px; font-weight:700}
+    .logo{width:38px; aspect-ratio:1; border-radius:12px; background:linear-gradient(135deg,#aab3c5, #6a7bd1 70%); box-shadow: var(--shadow); display:grid; place-items:center; font-weight:800; color:#0b0c0f}
+    nav ul{display:flex; list-style:none; gap: 18px; margin:0; padding:0}
+    nav a{color:var(--text); padding:10px 12px; border-radius:10px}
+    nav a:hover, nav a:focus{background: var(--panel)}
+
+    /* Hero */
+    .hero{display:grid; grid-template-columns: 1.2fr 1fr; gap: clamp(16px, 4vw, 36px); align-items:center; padding: clamp(24px, 5vw, 56px) 0}
+    .card{background: var(--panel); border:1px solid var(--line); border-radius:20px; box-shadow: var(--shadow)}
+    .card.pad{padding: clamp(18px, 3.4vw, 28px)}
+    .eyebrow{letter-spacing:.16em; text-transform:uppercase; color: var(--muted); font-size: .82rem}
+    .title{font-size: clamp(28px, 4.2vw, 48px); line-height:1.15; margin:.35em 0}
+    .lead{font-size: clamp(16px, 1.5vw, 18px); color: var(--muted)}
+    .buttons{display:flex; gap:12px; margin-top:18px; flex-wrap:wrap}
+    .btn{display:inline-flex; align-items:center; gap:10px; padding:10px 14px; border-radius:12px; border:1px solid var(--line)}
+    .btn.primary{background:linear-gradient(135deg, #7388ff, #4c61f6); color:#0b0c0f; font-weight:600; border:none}
+    .btn:focus{outline:2px solid var(--ring); outline-offset:3px}
+
+    /* Sections */
+    section{padding: clamp(24px, 6vw, 72px) 0}
+    h2{font-size: clamp(22px, 3.2vw, 32px); margin: 0 0 10px}
+    .sub{color:var(--muted); margin:0 0 22px}
+
+    /* Project grid */
+    .grid{display:grid; grid-template-columns: repeat(12, 1fr); gap: clamp(14px, 2vw, 20px)}
+    .span-7{grid-column: span 7}
+    .span-5{grid-column: span 5}
+    .span-6{grid-column: span 6}
+    .span-12{grid-column: 1 / -1}
+
+    /* Media frame */
+    .frame{background:#0c0e13; border:1px solid var(--line); border-radius:18px; overflow:hidden}
+    .frame figure{margin:0}
+    .caption{padding:12px 14px; border-top:1px solid var(--line); color:var(--muted); font-size:.95rem}
+
+    /* Slider */
+    .slider{position:relative}
+    .slides{display:flex; scroll-snap-type:x mandatory; overflow:auto; overscroll-behavior-x:contain; -webkit-overflow-scrolling:touch}
+    .slides img{width:100%; flex: 0 0 100%; scroll-snap-align:center}
+    .dots{display:flex; gap:8px; justify-content:center; padding:10px}
+    .dot{width:8px; height:8px; border-radius:50%; background:#4a5166; border:none}
+    .dot[aria-current="true"]{background:#aab3c5}
+    .ctrl{position:absolute; inset:0; display:flex; justify-content:space-between; align-items:center; pointer-events:none}
+    .ctrl button{pointer-events:auto; margin:0 8px; width:42px; height:42px; border-radius:50%; border:1px solid var(--line); background:color-mix(in srgb, var(--panel), transparent 20%); color:var(--text)}
+
+    /* Audio / video card */
+    .media-card audio, .media-card video{width:100%; display:block}
+    .meta{font-size:.95rem; color:var(--muted)}
+
+    /* Contact */
+    .links{display:flex; gap:12px; flex-wrap:wrap}
+
+    /* Footer */
+    footer{border-top: 1px solid var(--line); color:var(--muted); padding:24px 0 36px}
+
+    /* Responsive */
+    @media (max-width: 860px){
+      .hero{grid-template-columns: 1fr}
+      .span-7, .span-5, .span-6{grid-column: 1 / -1}
     }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.4/lib/p5.min.js"></script>
-  </head>
-  <body>
-    <h1>
-      Hello! My name is Jinje Jung,
-    </h1>
-    <p>
-      Hello! Thank you for taking the time to read this .txt file. My name is Jinje Jung, a current fourth year student at University of California, Santa Barbara, majoring in economics and accounting, with a minor in media arts and design. Quite the contrast. I have always had great interest in art, specifically movies, and design. It began when my friend and I started to design our own rings to sell to others, and with this, I found myself to greatly enjoying the process of planning a design, materializing it, and further improving on technical skills required to physicalize our ideas. I do not discriminate against any art forms - even the contemporary art nowadays that seems to get much disfavored opinions, but I do find great interest in works with attention to great detail - ranging from works such as Stanley Kubrick or Park Chan-Wook's films to the intricacies of Seurat's paintings. Taking inspiration from the artworks I favor, I wish to create and design ideas in which I myself would enjoy creating, and using as tabletop decoration. I also believe that art takes on an infinite array of forms, from the timeless, forever-useful design of the monobloc chair to Beirendonck's fashion pieces, and it is up to the viewer to interpret as is, and form an opinion of taste. 
-    </p>
-    <a href="https://jinjejungg.github.io/porfolio/index.html">Visit Portfolio</a>
-     <div id="wrap">
-    <div class="hint">Click to reshuffle · Space = pause/play · S = save PNG </div>
-  </div>
+</head>
+<body>
+  <a class="skip-link" href="#content">Skip to content</a>
 
-  <script src="sketch.js"></script>
-  </body>
+  <header>
+    <div class="wrap nav">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">JJ</div>
+        <span>Jinje Jung</span>
+      </div>
+      <nav aria-label="primary">
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="content" class="wrap">
+    <!-- Hero / About -->
+    <section id="about" class="hero">
+      <article class="card pad">
+        <div class="eyebrow">About me</div>
+        <h1 class="title">Hello! My name is Jinje Jung.</h1>
+        <p class="lead">
+My name is Jinje Jung, a current fourth year student at University of California, Santa Barbara, majoring in economics and accounting, with a minor in media arts and design. Quite the contrast. I have always had great interest in art, specifically movies, and design. It began when my friend and I started to design our own rings to sell to others, and with this, I found myself to greatly enjoying the process of planning a design, materializing it, and further improving on technical skills required to physicalize our ideas. I do not discriminate against any art forms - even the contemporary art nowadays that seems to get much disfavored opinions, but I do find great interest in works with attention to great detail - ranging from works such as Stanley Kubrick or Park Chan-Wook's films to the intricacies of Seurat's paintings. Taking inspiration from the artworks I favor, I wish to create and design ideas in which I myself would enjoy creating, and using as tabletop decoration. I also believe that art takes on an infinite array of forms, from the timeless, forever-useful design of the monobloc chair to Beirendonck's fashion pieces, and it is up to the viewer to interpret as is, and form an opinion of taste.        </p>
+        <p class="lead">
+          My early design journey started by creating and selling rings with a friend. I don’t discriminate among art forms—from the meticulous films of Stanley Kubrick and Park Chan‑Wook to the pointillism of Seurat—and I’m inspired by objects that combine utility and timelessness, like the monobloc chair or distinctive fashion pieces. Ultimately, I want to design things I’d enjoy creating and using, often as small tabletop works.
+        </p>
+        <div class="buttons">
+          <a class="btn primary" href="#projects">View Projects</a>
+          <a class="btn" href="https://jinjejungg.github.io/porfolio/index.html" target="_blank" rel="noopener">Original site</a>
+        </div>
+      </article>
+      <aside class="card pad" aria-label="Profile snapshot">
+        <h2 style="margin-top:0">Snapshot</h2>
+        <ul class="meta">
+          <li><strong>Major:</strong> Economics & Accounting</li>
+          <li><strong>Minor:</strong> Media Arts & Design</li>
+          <li><strong>Focus:</strong> Detail‑driven design, fabrication, and media</li>
+          <li><strong>Influences:</strong> Kubrick, Park Chan‑Wook, Seurat</li>
+        </ul>
+      </aside>
+    </section>
+
+    <!-- Projects -->
+    <section id="projects">
+      <h2>Projects</h2>
+      <p class="sub">A selection of work spanning fabrication, music, and brand storytelling.</p>
+
+      <!-- Project 1: NOT A LAMBORGHINI -->
+      <div class="grid" style="margin-bottom: 22px">
+        <div class="span-7 frame slider" aria-label="Not a Lamborghini image carousel">
+          <div class="slides" id="carSlides" tabindex="0" aria-live="polite">
+            <img src="https://jinjejungg.github.io/porfolio/wood1.png" alt="Laser‑cut wooden car model – front three‑quarter view." loading="lazy" />
+            <img src="https://jinjejungg.github.io/porfolio/ill1.png" alt="Illustrator layout of laser‑cut parts for the car model." loading="lazy" />
+            <img src="https://jinjejungg.github.io/porfolio/port3.png" alt="Rear view of the finished wooden car model." loading="lazy" />
+            <img src="https://jinjejungg.github.io/porfolio/port323.png" alt="Fusion 360 exploded layout of parts based on Lamborghini reference." loading="lazy" />
+          </div>
+          <div class="ctrl" aria-hidden="true">
+            <button type="button" class="prev" aria-label="Previous image">❮</button>
+            <button type="button" class="next" aria-label="Next image">❯</button>
+          </div>
+          <div class="dots" role="tablist" aria-label="Image selector">
+            <button class="dot" role="tab" aria-controls="carSlides" aria-current="true"></button>
+            <button class="dot" role="tab" aria-controls="carSlides"></button>
+            <button class="dot" role="tab" aria-controls="carSlides"></button>
+            <button class="dot" role="tab" aria-controls="carSlides"></button>
+          </div>
+          <div class="caption">Use arrow keys or swipe to navigate.</div>
+        </div>
+        <article class="span-5 card pad">
+          <h3 style="margin-top:0">NOT A LAMBORGHINI</h3>
+          <p>
+            A fabrication project developed after five weeks of learning Blender and Fusion from zero. Fascinated by the intricacies of car design, I attempted a scratch recreation of a Lamborghini Countach, using Fusion for parts and Illustrator for details like logos and headlamps. The result evokes the Pinewood Derby cars I made as a kid—only this time, no kit!
+          </p>
+          <p>After exporting parts for laser cutting, I assembled and finished the model, and I’d love to revisit the idea with increased technical complexity.</p>
+          <p class="meta"><strong>Tools:</strong> Fusion 360, Adobe Illustrator, Blender, Laser cutter</p>
+        </article>
+      </div>
+
+      <!-- Project 2: N64 DONKEY KONG DANCE PARTY -->
+      <div class="grid" style="margin-bottom: 22px">
+        <article class="span-6 card pad media-card">
+          <h3 style="margin-top:0">N64 DONKEY KONG DANCE PARTY</h3>
+          <p>
+            Learning Ableton and music production was far more challenging than expected. After many iterations—layering drums, samples, and a sine wave that evoked retro arcades—I produced a three‑minute track I imagine Donkey Kong dancing to while tossing barrels. The final minute is a melancholy comedown as the party ends. It took longer than planned, and the outcome veered from the starting concept, but I’m proud of a coherent piece.
+          </p>
+          <p class="meta">Listed as having 11 plays on SoundCloud on the original site.</p>
+        </article>
+        <div class="span-6 card pad media-card">
+          <audio controls preload="none" aria-label="Play Donkey Kong Dance Party">
+            <!-- Replace the src below with your actual MP3/OGG URL. Example: <source src="your-track.mp3" type="audio/mpeg"> -->
+            <source src="" type="audio/mpeg">
+            Your browser does not support the audio element.
+          </audio>
+          <p class="meta">Tip: host the audio in the same folder and set <code>src</code> above, or embed a SoundCloud player.</p>
+        </div>
+      </div>
+
+      <!-- Project 3: THE END OF AI -->
+      <div class="grid">
+        <article class="span-6 card pad">
+          <h3 style="margin-top:0">THE END OF AI</h3>
+          <p>
+            Ascension Industry was a small brand a friend and I built over five years, inspired by design and Pokémon. 2024 brought our biggest growth and attention—until a cease‑and‑desist arrived while we planned our four‑year anniversary pop‑up in Los Angeles. We reframed the event as a farewell and it became a memorable celebration with fans. Shorter than expected, the run was still a valuable learning curve, and I found real fulfillment making the accompanying 30‑second video.
+          </p>
+        </article>
+        <div class="span-6 card pad media-card">
+          <video controls preload="metadata" poster="https://images.unsplash.com/photo-1524666041070-9d87656c25bb?q=80&w=1400&auto=format&fit=crop" aria-label="30-second brand video placeholder">
+            <!-- Replace with your .mp4/.webm file sources -->
+            <source src="" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+          <p class="meta">Tip: replace the video <code>src</code> with your own file, or link to a hosted clip.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact">
+      <h2>Contact</h2>
+      <p class="sub">Open to opportunities and collaborations.</p>
+      <div class="card pad">
+        <div class="links">
+          <a class="btn" href="mailto:hello@example.com" aria-label="Send email">Email</a>
+          <a class="btn" href="https://www.linkedin.com" target="_blank" rel="noopener">LinkedIn</a>
+          <a class="btn" href="https://www.instagram.com" target="_blank" rel="noopener">Instagram</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <small>© <span id="y"></span> Jinje Jung, 2025</small>
+    </div>
+  </footer>
+
+  <script>
+    // Year
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Accessible slider (keyboard + dots + buttons)
+    const slider = document.querySelector('.slider');
+    const scroller = slider.querySelector('.slides');
+    const dots = [...slider.querySelectorAll('.dot')];
+    const prev = slider.querySelector('.prev');
+    const next = slider.querySelector('.next');
+
+    function indexFromScroll(){
+      const {scrollLeft, clientWidth} = scroller;
+      return Math.round(scrollLeft / clientWidth);
+    }
+    function goTo(i){
+      const x = i * scroller.clientWidth;
+      scroller.scrollTo({left:x, behavior:'smooth'});
+      dots.forEach((d,di)=>d.setAttribute('aria-current', di===i ? 'true' : 'false'));
+    }
+    prev.addEventListener('click', ()=> goTo(Math.max(0, indexFromScroll()-1)) );
+    next.addEventListener('click', ()=> goTo(Math.min(dots.length-1, indexFromScroll()+1)) );
+    dots.forEach((d,di)=> d.addEventListener('click', ()=> goTo(di)) );
+    scroller.addEventListener('scroll', ()=> {
+      const i = indexFromScroll();
+      dots.forEach((d,di)=>d.setAttribute('aria-current', di===i ? 'true' : 'false'));
+    });
+    scroller.addEventListener('keydown', (e)=>{
+      if(e.key==='ArrowLeft'){ e.preventDefault(); prev.click(); }
+      if(e.key==='ArrowRight'){ e.preventDefault(); next.click(); }
+    });
+  </script>
+</body>
 </html>
